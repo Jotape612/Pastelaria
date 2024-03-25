@@ -23,33 +23,42 @@ categoria_info varchar(50),
 categoria_lac varchar(20)
 );
 
+
+
 create table sabor (
 sab_id int primary key auto_increment,
 sab_recheio varchar (100)
 );
 
 
-create table cardapio (
-car_id int primary key auto_increment,
-car_nome_pas varchar(100),
-car_fk_sabor int, 
-car_tamanho varchar(100),
-car_preco float,
-car_tipo varchar(10),
-car_fk_categoria int,
+create table produtos (
+prod_id int primary key auto_increment,
+prod_nome_pas varchar(100),
+prod_fk_sabor int, 
+prod_tamanho varchar(100),
+prod_preco float,
+prod_fk_categoria int,
 
 
-foreign key (car_fk_categoria) references categoria  (categoria_id)
+foreign key (prod_fk_categoria) references categoria  (categoria_id)
 );
 
+create table produtos_vendidos (
+prodVE_id int primary key auto_increment,
+prodVE_data date,
+prodVE_qnt float,
+prodVE_fk_prod int,
 
-create table itens_cardapio (
-itcard_id int auto_increment primary key,
-itcard_fk_cardapio int,
-itcard_qnt float,
-itcard_valor_total int,
+foreign key (prodVE_fk_prod) references produtos  (prod_id)
+);
 
-foreign key (itcard_fk_cardapio) references cardapio (car_id)
+create table itens_venda (
+iven_id int auto_increment primary key,
+iven_fk_produtos int,
+iven_qnt float,
+iven_valor_total int,
+
+foreign key (iven_fk_cardapio) references produtos (prod_id)
 );
 
 create table forma_pagamento 
@@ -68,21 +77,21 @@ func_vendas int
 );
 
 
-create table conta (
-conta_id int auto_increment primary key,
-conta_fk_cliente int,
-conta_fk_itens_produtos int,
-conta_fk_fpag int,
-conta_valor_pago float,
-conta_troco float,
-conta_total float,
-conta_data date,
-conta_fk_funcionario int,
+create table venda (
+venda_id int auto_increment primary key,
+venda_fk_cliente int,
+venda_fk_itens_produtos int,
+venda_fk_fpag int,
+venda_valor_pago float,
+venda_troco float,
+venda_total float,
+venda_data date,
+venda_fk_funcionario int,
 
-foreign key (conta_fk_cliente) references clientes (cli_id),
-foreign key (conta_fk_itens_produtos) references itens_cardapio (itcard_id),
-foreign key (conta_fk_fpag) references forma_pagamento (fpag_id),
-foreign key (conta_fk_funcionario) references funcionario (func_id)
+foreign key (venda_fk_cliente) references clientes (cli_id),
+foreign key (venda_fk_itens_produtos) references itens_vendas (iven_id),
+foreign key (venda_fk_fpag) references forma_pagamento (fpag_id),
+foreign key (venda_fk_funcionario) references funcionario (func_id)
 );
 
 
