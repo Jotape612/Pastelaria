@@ -1,16 +1,17 @@
+
+
 INSERT INTO clientes (cli_nome, cli_nome_registro, cli_cpf, cli_nasc, cli_tel, cli_email, cli_bairro, cli_cidade, cli_estado) 
 VALUES 
-('João da Silva', 'João', '123.456.789-00', '1990-05-15', '(11) 9999-8888', 'joao@example.com', 'Centro', 'São Paulo', 'SP'),
-('Maria Oliveira', 'Maria', '987.654.321-00', '1985-10-20', '(21) 7777-6666', 'maria@example.com', 'Copacabana', 'Rio de Janeiro', 'RJ'),
-('Pedro Souza', 'Pedro', '456.789.123-00', '1998-03-25', '(31) 5555-4444', 'pedro@example.com', 'Barreiro', 'Belo Horizonte', 'MG');
+('João da Silva', 'João', '123.456.789-00', '2005-05-15', '(11) 9999-8888', 'joao@example.com', 'Centro', 'São Paulo', 'SP'), -- +18
+('Maria Oliveira', 'Maria', '987.654.321-00', '2008-10-20', '(21) 7777-6666', 'maria@example.com', 'Copacabana', 'Rio de Janeiro', 'RJ'), -- -18
+('Pedro Souza', 'Pedro', '456.789.123-00', '1998-03-25', '(31) 5555-4444', 'pedro@example.com', 'Barreiro', 'Belo Horizonte', 'MG'); -- +18
 
 insert into categoria (categoria_info,categoria_lac)
 values
 ('vegetariano','sem lac'), ('vegetariano','com lac'),
 ('vegano', 'sem lac'),
-('original', 'sem lac'), ('original', 'com lac');
-insert into categoria (categoria_info,categoria_lac)
-values ('bebidas', 'N')
+('original', 'sem lac'), ('original', 'com lac'),
+('bebidas', 'N');
 
 select*from categoria;
 
@@ -103,10 +104,9 @@ VALUES
 
 ('Pastel de Atum', 18, 'Pequeno', 5.50,  5),
 
-('Cagha Tronko', 19, 'Medio', 12.50, 5);
+('Cagha Tronko', 19, 'Medio', 12.50, 5),
 
-INSERT INTO produtos (prod_nome_pas, prod_fk_sabor, prod_tamanho, prod_preco, prod_fk_categoria)
-VALUES 
+
 
 ('Coca-cola', 6, '1L', '6.50', 6),  
 ('Sprite', 6, '1L', '5.50', 6),  
@@ -138,22 +138,20 @@ VALUES
 
 -- Falta de inserção nas seguitnes tabelas:
 
-select*from cardapio;
-
-create table itens_vendas (
-iven_id int auto_increment primary key,
-iven_fk_cardapio int,
-iven_qnt float,
-iven_valor_total int,
-
-foreign key (iven_fk_cardapio) references cardapio (car_id)
-);
+select*from itens_venda;
 
 
-insert into itens_cardapio (iven_fk_cardapio, itcard_qnt, itcard_valor_total)
-values (37, '2', '25.00');
-insert into itens_cardapio (iven_fk_cardapio, itcard_qnt, itcard_valor_total)
-values (38, '1', '6.50');
+
+
+
+insert into itens_venda (iven_fk_produtos, iven_qnt, iven_valor_total)
+values (18, '2', '17.00'), (38, '1', '6.50'), (33, '3', '21.00');
+
+insert into itens_venda (iven_fk_produtos, iven_qnt, iven_valor_total)
+values (18, '2', '17.00');
+
+insert into itens_venda (iven_fk_produtos, iven_qnt, iven_valor_total)
+values (16, '1', '12.50');
 
 
 
@@ -174,3 +172,85 @@ foreign key (venda_fk_fpag) references forma_pagamento (fpag_id),
 foreign key (venda_fk_funcionario) references funcionario (func_id)
 );
 
+insert into venda (venda_fk_cliente, venda_fk_itens_produtos, venda_fk_fpag, venda_valor_pago, venda_troco,venda_total,venda_data,venda_fk_funcionario)
+values (1, 1, 3, '23.50', '0', '23.50', '2024-03-25', 1);
+
+insert into venda (venda_fk_cliente, venda_fk_itens_produtos, venda_fk_fpag, venda_valor_pago, venda_troco,venda_total,venda_data,venda_fk_funcionario)
+values (1, 2, 3, '6.50', '0', '6.50', '2024-03-25', 1);
+
+insert into venda (venda_fk_cliente, venda_fk_itens_produtos, venda_fk_fpag, venda_valor_pago, venda_troco,venda_total,venda_data,venda_fk_funcionario)
+values (3, 3, 1, '50.00', '29.00', '21.00', '2024-03-25', 2);
+
+insert into venda (venda_fk_cliente, venda_fk_itens_produtos, venda_fk_fpag, venda_valor_pago, venda_troco,venda_total,venda_data,venda_fk_funcionario)
+values (3, 3, 1, '50.00', '29.00', '21.00', '2024-03-25', 2);
+
+insert into venda (venda_fk_cliente, venda_fk_itens_produtos, venda_fk_fpag, venda_valor_pago, venda_troco,venda_total,venda_data,venda_fk_funcionario)
+values (2, 4, 3, '23.50', '0', '23.50', '2024-03-25', 1);
+
+insert into venda (venda_fk_cliente, venda_fk_itens_produtos, venda_fk_fpag, venda_valor_pago, venda_troco,venda_total,venda_data,venda_fk_funcionario)
+values (2, 5, 3, '17.50', '0', '17.50', '2024-03-25', 1);
+
+
+
+DELIMITER //
+CREATE function fn_get_estado (cod_parametro int)  returns varchar(100)
+
+BEGIN
+declare var_status varchar(100);
+
+select auto_estado into var_status from automovel
+where auto_id = cod_parametro;
+return var_status;
+END//
+
+DELIMITER ;
+
+
+
+-- DELIMITER CRIADOS PARA ORGANIZAR OS PRODUTOS
+
+DELIMITER //
+CREATE PROCEDURE recheio_pastel_original (in categor int) 
+
+BEGIN
+  	if categor = 1 then
+   select*from produtos where prod_fk_categoria = 4;
+   
+   else if categor = 2 then
+   select*from produtos where prod_fk_categoria = 5;
+   
+   else
+   select*from produtos where prod_fk_categoria = 6;
+   end if;
+end if;
+END//
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE recheio_pastel_vegano_vegetariano (in categ int) 
+
+BEGIN
+  	if categ = 1 then
+   select*from produtos where prod_fk_categoria = 1;
+   
+   else if categ = 2 then
+   select*from produtos where prod_fk_categoria = 2;
+   
+   else
+   select*from produtos where prod_fk_categoria = 3;
+   end if;
+end if;
+END//
+
+DELIMITER ;
+
+
+call recheio_pastel_vegano_vegetariano (1); -- vegetariano, sem lactose
+call recheio_pastel_vegano_vegetariano (2); -- vegetariano, com lactose
+call recheio_pastel_vegano_vegetariano (3); -- vegano
+call recheio_pastel_original (4); -- pastel c/ carne, com lac
+call recheio_pastel_original (5); -- pastel c/ carne, sem lac
+call recheio_pastel_original (6); -- bebidas
+
+select*from produtos;
