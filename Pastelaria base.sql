@@ -40,19 +40,12 @@ prod_fk_sabor int,
 prod_tamanho varchar(100),
 prod_preco float,
 prod_fk_categoria int,
+prod_total_vendido int,
 
 
 foreign key (prod_fk_categoria) references categoria  (categoria_id)
 );
 
-create table produtos_vendidos (
-prodVE_id int primary key auto_increment,
-prodVE_data date,
-prodVE_qnt float,
-prodVE_fk_prod int,
-
-foreign key (prodVE_fk_prod) references produtos  (prod_id)
-);
 
 create table itens_venda (
 iven_id int auto_increment primary key,
