@@ -10,7 +10,20 @@ WHERE categoria_info = 'vegano'
 AND TIMESTAMPDIFF(YEAR, cli_nasc, CURDATE()) >= 18;
  
  -- Desafio 2
- 
+ SELECT 
+    YEAR(venda_data) AS ano,
+    MONTH(venda_data) AS mes,
+    cli_id, cli_nome,
+    COUNT(*) AS total_pedidos
+FROM 
+    venda
+INNER JOIN 
+    clientes ON venda_fk_cliente = cli_id
+GROUP BY 
+    YEAR(venda_data), MONTH(venda_data), cli_id, cli_nome
+ORDER BY 
+    YEAR(venda_data), MONTH(venda_data), total_pedidos DESC;
+
  -- Desafio 3
 
 SELECT prod_nome_pas
@@ -26,16 +39,11 @@ FROM produtos
 WHERE prod_id BETWEEN 1 AND 37;
 
 
--- Desafio 5
-
-
-
 
 -- Desafio 6
 
-select prod_nome, max(iven_vendidos) as total_vendido, 
-vend_qnt from venda
-inner join itens_venda on vend_id = iven_fk_produtos
-inner join produtos on iven_fk_produtos = prod_id
-group by prod_nome_pas
-order by total_venvido desc;
+SELECT prod_nome_pas, SUM(iven_qnt) AS total_vendido
+FROM produtos
+JOIN itens_venda ON prod_id = iven_fk_produtos
+GROUP BY prod_id
+ORDER BY total_vendido;
