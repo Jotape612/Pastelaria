@@ -1,6 +1,6 @@
-CREATE DATABASE pastelaria_jotape;
+create database Pastelaria_japo;
 
-use pastelaria_jotape;
+use pastelaria_japo;
 
 create table clientes (
 cli_id int primary key auto_increment,
@@ -14,6 +14,8 @@ cli_bairro varchar(100),
 cli_cidade varchar (50),
 cli_estado varchar(150)
 );
+
+alter table clientes add column cli_pedidos int;
 
 
 
@@ -58,7 +60,7 @@ iven_fk_produtos int,
 iven_qnt float,
 iven_valor_total int,
 
-foreign key (iven_fk_cardapio) references produtos (prod_id)
+foreign key (iven_fk_produtos) references produtos (prod_id)
 );
 
 create table forma_pagamento 
@@ -89,13 +91,7 @@ venda_data date,
 venda_fk_funcionario int,
 
 foreign key (venda_fk_cliente) references clientes (cli_id),
-foreign key (venda_fk_itens_produtos) references itens_vendas (iven_id),
+foreign key (venda_fk_itens_produtos) references itens_venda (iven_id),
 foreign key (venda_fk_fpag) references forma_pagamento (fpag_id),
 foreign key (venda_fk_funcionario) references funcionario (func_id)
 );
-
-
-
-
-
-
